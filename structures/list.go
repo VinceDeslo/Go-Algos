@@ -24,7 +24,7 @@ type List struct {
 	size int
 }
 
-// Initialize a new list
+// Constructor for a new list
 func createList(name string) *List {
 	return &List{name: name}
 }

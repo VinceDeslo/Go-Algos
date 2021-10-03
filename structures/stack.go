@@ -4,7 +4,7 @@ import "fmt"
 
 /*
 Slice implementation
-Push: O(1)
+Push: O(n)
 Pop: O(1)
 */
 
@@ -25,12 +25,14 @@ func (s *Stack) push(value int) {
 }
 
 // Remove from the stack
-func (s *Stack) pop() {
+func (s *Stack) pop() int {
 	if s.top == -1 {
-		return
+		return 0
 	}
+	value := s.values[s.top]
 	s.values = s.values[:len(s.values)-1]
 	s.top -= 1
+	return value
 }
 
 // Utility to print a stack
@@ -49,10 +51,10 @@ func main() {
 	printStack(stack)
 
 	fmt.Println("Stack removal")
-	stack.pop()
-	stack.pop()
-	stack.pop()
-	stack.pop()
+	fmt.Println("Popping:", stack.pop())
+	fmt.Println("Popping:", stack.pop())
+	fmt.Println("Popping:", stack.pop())
+	fmt.Println("Popping:", stack.pop())
 	fmt.Println(stack.top)
 	printStack(stack)
 }

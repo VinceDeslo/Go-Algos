@@ -4,6 +4,12 @@ import (
 	"fmt"
 )
 
+/*
+Adjacency lists slice implementation
+Depth first: O(Vertex+Edges)
+Breadth first: O(Vertex+Edges)
+*/
+
 type Vertex struct {
 	name    string
 	age     int
@@ -70,27 +76,55 @@ func (g *Graph) dfs() {
 }
 
 // Explore successors of root vertex recursively
-func depthSuccessors(g *Graph, v *Vertex) {
-	fmt.Println("Visiting:", v.name)
-	v.visited = true
-	g.printEdges(v)
-	// Explore all connected vertexes
-	for _, v := range g.edges[v] {
-		if !v.visited {
-			depthSuccessors(g, v)
+func depthSuccessors(g *Graph, root *Vertex) {
+	fmt.Println("Visiting:", root.name)
+	root.visited = true
+	g.printEdges(root)
+	// Explore all first child vertex
+	for _, neighbour := range g.edges[root] {
+		if !neighbour.visited {
+			depthSuccessors(g, neighbour)
 		}
 	}
 }
 
-/*
-	Visit all children of root then descend to lower level
-*/
-func bfs() {
-
+// Breadth first search algorithm entry point
+func (g *Graph) bfs() {
+	fmt.Println("Starting Breadth First Search")
+	for _, v := range g.nodes {
+		v.visited = false
+	}
+	for _, v := range g.nodes {
+		if !v.visited {
+			breadthSuccessors(g, v)
+		}
+	}
 }
 
-func breadthSuccessors() {
+// Vertex Queue for BFS algorithm
+var queue []*Vertex
 
+// Explore successors of root vertex recursively
+func breadthSuccessors(g *Graph, root *Vertex) {
+	fmt.Println("Visiting:", root.name)
+	root.visited = true
+	g.printEdges(root)
+
+	queue = append(queue, root)
+
+	for len(queue) > 0 {
+		curr := queue[0]
+		queue = queue[1:]
+		// Explore all child vertexes
+		for _, neighbour := range g.edges[curr] {
+			if !neighbour.visited {
+				fmt.Println("Visiting:", neighbour.name)
+				neighbour.visited = true
+				queue = append(queue, neighbour)
+				g.printEdges(neighbour)
+			}
+		}
+	}
 }
 
 // Utility method to print edges of a vertex
@@ -123,5 +157,8 @@ func main() {
 
 	graph.addUndirectedEdge(node5, node1)
 
+	fmt.Printf("\n=================================\n\n")
 	graph.dfs()
+	fmt.Printf("\n=================================\n\n")
+	graph.bfs()
 }
